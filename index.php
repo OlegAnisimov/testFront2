@@ -31,9 +31,9 @@ foreach ($decode as $key => $value) {
     $priceGoldAlt = $decode[$key]['priceGoldAlt'];
     echo <<<PRODUCT_TEMPLATE
     <body> 
-<!--     // Может убрать?-->
+
         <main> 
-<!--        // Может убрать?-->
+
         <div id="products_section">
             <div class="products_page pg_0">
                 <div class="product product_horizontal">                                
@@ -117,14 +117,15 @@ foreach ($decode as $key => $value) {
     <script>
 //   Замыкания?
 let count = 1
-x = $(".stepper-arrow.up")
-x.click(function() {
+up = $(".stepper-arrow.up")
+up.click(function() {    
     count += 1 
   sosed = this.previousElementSibling
   console.log(sosed)
   sosed.value = count
 })
-// console.log(x)
+
+down = 
     
     
              

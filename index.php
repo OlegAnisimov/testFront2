@@ -124,15 +124,23 @@ $(".stepper-arrow.up").click(function() {
   let val = +this.previousElementSibling.getAttribute("value") || 0;
   this.setAttribute("value", ++val)
   this.previousElementSibling.setAttribute("value", val);
-
 })
 
 $(".stepper-arrow.down").click(function() {
   let valMinus = this.parentNode.querySelector('input').getAttribute("value");
   this.setAttribute("value", --valMinus);
   this.parentNode.querySelector('input').setAttribute("value", valMinus)
-    })
-
+    })   
+    
+  // $(".stepper-arrow.down").click(function() {
+//     let valMinus = this.parentNode.querySelector('input').getAttribute("value");
+//     if (valMinus > 0) {
+//         this.setAttribute("value", --valMinus);
+//         this.parentNode.querySelector('input').setAttribute("value", valMinus)
+//     }  
+//  
+//     })  
+    
 </script>
 </body>
 SCRIPT;

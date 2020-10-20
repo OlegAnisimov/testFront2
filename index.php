@@ -137,7 +137,12 @@ $(".stepper-arrow.down").click(function() {
 $(".product__count.stepper-input").change(function() {
   this.setAttribute("value", this.value)  
 })
-
+</script>
+<script >
+$(".unit--select").click(function() {
+    console.log("fff")
+    this.classList.add("unit--active")
+})
 
 </script>
 </body>

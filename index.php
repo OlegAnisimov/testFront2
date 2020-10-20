@@ -138,12 +138,28 @@ $(".product__count.stepper-input").change(function() {
   this.setAttribute("value", this.value)  
 })
 </script>
-<script >
-$(".unit--select").click(function() {
-    console.log("fff")
-    this.classList.add("unit--active")
-})
+<!--<script >-->
+<!--$(".unit&#45;&#45;select").click(function() {    -->
+<!--    console.log("fff")-->
+<!--    // this.classList.add("unit&#45;&#45;active")-->
+<!--    this.className += " unit&#45;&#45;active"-->
+<!--    this.previousElementSibling.classList.remove("unit&#45;&#45;active")-->
+<!--})-->
+<!--</script>-->
 
+<script>
+$(".unit--select").click(function() {
+    let condition = this.classList.contains("unit--active")
+    console.log(condition)
+    if (condition === false)   {
+        this.className += " unit--active"
+        if (this.nextElementSibling != null) {
+            this.nextElementSibling.classList.remove("unit--active")
+        } else  {
+            this.previousElementSibling.classList.remove("unit--active")
+        }
+    }          
+})
 </script>
 </body>
 SCRIPT;

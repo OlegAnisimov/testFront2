@@ -94,9 +94,9 @@ foreach ($decode as $key => $value) {
                                 </div>
                             </div>
                         </div>
-                        <div class="product__wrapper $productId">
+                        <div class="product__wrapper">
                             <div class="product_count_wrapper">
-                                <div class="stepper $productId">
+                                <div class="stepper">
                                     <input class="product__count stepper-input" type="text" value="1">
                                     <span is="click-counter" class="stepper-arrow up"></span>
                                     <span class="stepper-arrow down"></span>                                            
@@ -119,13 +119,20 @@ PRODUCT_TEMPLATE;
 }
 echo <<<SCRIPT
 <script >
-//   Замыкания!!! - так как это счетчики
-
-$(".stepper-arrow").click(function() {
+//   Замыкания
+$(".stepper-arrow.up").click(function() {
   let val = +this.previousElementSibling.getAttribute("value") || 0;
-  this.setAttribute("value", ++val);
+  this.setAttribute("value", ++val)
   this.previousElementSibling.setAttribute("value", val);
+
 })
+
+$(".stepper-arrow.down").click(function() {
+  let valMinus = this.parentNode.querySelector('input').getAttribute("value");
+  this.setAttribute("value", --valMinus);
+  this.parentNode.querySelector('input').setAttribute("value", valMinus)
+    })
+
 </script>
 </body>
 SCRIPT;

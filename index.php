@@ -96,7 +96,7 @@ foreach ($decode as $key => $value) {
                             <div class="product_count_wrapper">
                                 <div class="stepper">
                                     <input class="product__count stepper-input" type="number" value="1" data-id="$productId"  >
-                                    <span is="click-counter" class="stepper-arrow up" data-id="$productId"></span>
+                                    <span class="stepper-arrow up" data-id="$productId"></span>
                                     <span class="stepper-arrow down" data-id="$productId"></span>                                            
                                 </div>
                             </div>

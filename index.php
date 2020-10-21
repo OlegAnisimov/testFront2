@@ -17,6 +17,14 @@ HEADER;
 $file = file_get_contents('products.json');
 $decode = json_decode($file, true);
 
+//if( !function_exists('ceiling') )
+//{
+//    function ceiling($number, $significance = 1)
+//    {
+//        return ( is_numeric($number) && is_numeric($significance) ) ? (ceil($number/$significance)*$significance) : false;
+//    }
+//}
+
 foreach ($decode as $key => $value) {
     $productId = $decode[$key]['productId'];
     $code = str_replace('00000', '', $decode[$key]['code']);
@@ -25,14 +33,15 @@ foreach ($decode as $key => $value) {
     $primaryImageUrl = substr_replace($decode[$key]['primaryImageUrl'], $img_modificator, -4, -10);
     $title = $decode[$key]['title'];
     $assocProducts = $decode[$key]['assocProducts'];
-    $priceRetail = $decode[$key]['priceRetail'];
+//    $priceRetailAlt = round($decode[$key]['priceRetailAlt'], 2) ;
+//    $priceGoldAlt = round($decode[$key]['priceGoldAlt'],2) ;
     $priceRetailAlt = $decode[$key]['priceRetailAlt'];
-    $priceGold = $decode[$key]['priceGold'];
     $priceGoldAlt = $decode[$key]['priceGoldAlt'];
+    $priceRetail = $decode[$key]['priceRetail'];
+    $priceGold = $decode[$key]['priceGold'];
     echo <<<PRODUCT_TEMPLATE
     <body> 
         <main> 
-
         <div id="products_section">
             <div class="products_page pg_0">
                 <div class="product product_horizontal">                                
@@ -64,7 +73,7 @@ foreach ($decode as $key => $value) {
                     </div>
                         <p class="product_price_club_card">
                             <span class="product_price_club_card_text">По карте<br>клуба</span>
-                            <span class="goldPrice">$priceGold</span>
+                            <span class="goldPrice" id="$productId"> $priceGoldAlt</span>
                             <span class="rouble__i black__i">
                                 <svg version="1.0" id="rouble__b" xmlns="http://www.w3.org/2000/svg" x="0" y="0" width="30px" height="22px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rouble_black"></use>
@@ -72,7 +81,7 @@ foreach ($decode as $key => $value) {
                              </span>
                         </p>
                         <p class="product_price_default">
-                            <span class="retailPrice">$priceRetail</span>
+                            <span class="retailPrice">$priceRetailAlt</span>
                             <span class="rouble__i black__i">
                                 <svg version="1.0" id="rouble__g" xmlns="http://www.w3.org/2000/svg" x="0" y="0" width="30px" height="22px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rouble_gray"></use>
@@ -146,18 +155,43 @@ $(".product__count.stepper-input").change(function() {
 <!--    this.previousElementSibling.classList.remove("unit&#45;&#45;active")-->
 <!--})-->
 <!--</script>-->
-
+<!--<script src="init__select.js" ></script>-->
 <script>
+function getJsonData(){
+    var jqXHR = $.ajax({
+        url: "products.json",
+        async: false});
+    return $.parseJSON(jqXHR.responseText);
+}
+const getJson = getJsonData() 
+
 $(".unit--select").click(function() {
-    let condition = this.classList.contains("unit--active")
-    console.log(condition)
-    if (condition === false)   {
-        this.className += " unit--active"
+    let mainCondition = this.classList.contains("unit--active")
+    if (mainCondition === false)   {
+        let conditionPriceGold = this.parentNode.parentNode.nextElementSibling.children[1].classList.contains("price--gold")
+        let currentId = this.parentNode.parentNode.nextElementSibling.children[1].id
+        console.log(currentId)
+        this.className += " unit--active"     
         if (this.nextElementSibling != null) {
             this.nextElementSibling.classList.remove("unit--active")
         } else  {
             this.previousElementSibling.classList.remove("unit--active")
         }
+        
+        for (key in getJson) {
+            if (currentId == getJson[key].productId) {
+                var currentPriceGold = getJson[key].priceGold
+                var currentPriceGoldAlt = getJson[key].priceGoldAlt
+            }                             
+        }        
+        if (conditionPriceGold === false) {
+            this.parentNode.parentNode.nextElementSibling.children[1].className += " price--gold"
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGold
+        } 
+        if (conditionPriceGold === true) {
+            this.parentNode.parentNode.nextElementSibling.children[1].classList.remove("price--gold") 
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGoldAlt
+        }        
     }          
 })
 </script>

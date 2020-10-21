@@ -17,18 +17,9 @@ HEADER;
 $file = file_get_contents('products.json');
 $decode = json_decode($file, true);
 
-//if( !function_exists('ceiling') )
-//{
-//    function ceiling($number, $significance = 1)
-//    {
-//        return ( is_numeric($number) && is_numeric($significance) ) ? (ceil($number/$significance)*$significance) : false;
-//    }
-//}
-
 foreach ($decode as $key => $value) {
     $productId = $decode[$key]['productId'];
     $code = str_replace('00000', '', $decode[$key]['code']);
-//    $primaryImageUrl =  $decode[$key]['primaryImageUrl'];
     $img_modificator = '_220x220_1';
     $primaryImageUrl = substr_replace($decode[$key]['primaryImageUrl'], $img_modificator, -4, -10);
     $title = $decode[$key]['title'];
@@ -106,7 +97,7 @@ foreach ($decode as $key => $value) {
                         <div class="product__wrapper">
                             <div class="product_count_wrapper">
                                 <div class="stepper">
-                                    <input class="product__count stepper-input" type="number" value="1"  >
+                                    <input class="product__count stepper-input" type="number" value="1" data-id="$productId"  >
                                     <span is="click-counter" class="stepper-arrow up" data-id="$productId"></span>
                                     <span class="stepper-arrow down" data-id="$productId"></span>                                            
                                 </div>
@@ -127,9 +118,6 @@ foreach ($decode as $key => $value) {
 PRODUCT_TEMPLATE;
 }
 echo <<<SCRIPT
-<!--<script type="module" src="arrowClick.js"></script>-->
-<!--<script type="module" src="init__select.js" ></script>-->
-
 <script >
 function getJsonData(){
     var jqXHR = $.ajax({
@@ -145,7 +133,8 @@ $(".unit--select").click(function() {
         let conditionPriceGold = this.parentNode.parentNode.nextElementSibling.children[1].classList.contains("price--gold")
         let conditionPriceRetail = this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].classList.contains("price")
         let currentId = this.parentNode.parentNode.nextElementSibling.children[1].id
-        console.log(currentId)
+        let currentValue = this.parentNode.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].children[0].children[0].getAttribute("value")
+        
         this.className += " unit--active"
         if (this.nextElementSibling != null) {
             this.nextElementSibling.classList.remove("unit--active")
@@ -155,28 +144,27 @@ $(".unit--select").click(function() {
 
         for (key in getJson) {
             if (currentId == getJson[key].productId) {
-                var currentPriceGold = getJson[key].priceGold
-                var currentPriceGoldAlt = getJson[key].priceGoldAlt
-
-                var currentPrice = getJson[key].priceRetail
-                var currentPriceAlt = getJson[key].priceRetailAlt
+                var basePriceGold = getJson[key].priceGold
+                var basePriceGoldAlt = getJson[key].priceGoldAlt
+                var basePrice = getJson[key].priceRetail
+                var basePriceAlt = getJson[key].priceRetailAlt
             }
         }
         if (conditionPriceGold === false) {
             this.parentNode.parentNode.nextElementSibling.children[1].className += " price--gold"
-            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGold
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = basePriceGold*currentValue
         }
-        if (conditionPriceGold === true) {
+        if (conditionPriceGold === true) {    
             this.parentNode.parentNode.nextElementSibling.children[1].classList.remove("price--gold")
-            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGoldAlt
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = basePriceGoldAlt*currentValue
         }
         if (conditionPriceRetail === false) {
             this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].className += " price"
-            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = currentPrice
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = basePrice*currentValue
         }
         if (conditionPriceRetail === true) {
             this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].classList.remove("price")
-            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = currentPriceAlt
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = basePriceAlt*currentValue
         }
     }
 })
@@ -209,14 +197,29 @@ $(".stepper-arrow.down").click(function() {
      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGold*valMinus
 })
 
-$(".product__count.stepper-input").change(function() {    
+$(".product__count.stepper-input").change(function() {            
   this.setAttribute("value", this.value)  
-  let currentPriceGold = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].textContent
-  let currentPrice = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].textContent
-  this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = currentPrice*this.value
-  this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = currentPriceGold*this.value
+  let currentId = this.getAttribute("data-id")
+  for (key in getJson) {
+      if (currentId == getJson[key].productId)   {
+          var basePriceGold = getJson[key].priceGold
+          var basePriceGoldAlt = getJson[key].priceGoldAlt
+          var basePrice = getJson[key].priceRetail
+          var basePriceAlt = getJson[key].priceRetailAlt
+      } 
+  }
+  let parent = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0]
+  let unitActive = parent.querySelector(".unit--active")
+  let condition  = unitActive.children[0].textContent 
+  console.log(condition)
+  if (condition === "За м. кв.") {
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePriceAlt*this.value
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGoldAlt*this.value
+  } else  {
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePrice*this.value
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGold*this.value
+  }   
 })
-
 </script>
 </body>
 SCRIPT;

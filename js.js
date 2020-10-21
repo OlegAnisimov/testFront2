@@ -6,7 +6,6 @@ function getJsonData(){
     return $.parseJSON(jqXHR.responseText);
 }
 const getJson = getJsonData()
-
 // Обработка изменения типа тары
 $(".unit--select").click(function() {
     let mainCondition = this.classList.contains("unit--active")
@@ -53,6 +52,7 @@ $(".stepper-arrow.up").click(function() {
     let val = +this.previousElementSibling.getAttribute("value") || 0
     let currentId = this.getAttribute("data-id")
     this.previousElementSibling.setAttribute("value", ++val)
+    this.previousElementSibling.value = val
 
     for (key in getJson) {
         if (currentId == getJson[key].productId) {
@@ -80,7 +80,7 @@ $(".stepper-arrow.down").click(function() {
     let currentId = this.getAttribute("data-id")
     if (val > 0) {
         this.parentNode.querySelector('input').setAttribute("value", --val)
-        this.parentNode.querySelector('input').innerHTML = val
+        this.previousElementSibling.previousElementSibling.value = val
     }
     for (key in getJson) {
         if (currentId == getJson[key].productId) {
@@ -116,7 +116,7 @@ $(".product__count.stepper-input").change(function() {
     let parent     = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0]
     let unitActive = parent.querySelector(".unit--active")
     let condition  = unitActive.children[0].textContent
-    if (condition === "За м. кв.") {
+    if (condition  === "За м. кв.") {
         this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePriceAlt*this.value
         this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGoldAlt*this.value
     } else  {

@@ -36,7 +36,7 @@ foreach ($decode as $key => $value) {
                 <div class="product product_horizontal">                                
                     <span class="product_code">$code</span>
                     <div class="product_status_tooltip_container">
-                        <span class="product_status">Наличие ??? </span>
+                        <span class="product_status">Наличие </span>
                     </div>                                
                     <div class="product_photo">
                         <a href="#" class="url--link product__link">
@@ -116,9 +116,6 @@ PRODUCT_TEMPLATE;
 }
 echo <<<SCRIPT
 <script src="js.js"></script>
-<script >
-
-</script>
 </body>
 SCRIPT;
 ?>

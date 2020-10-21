@@ -130,10 +130,10 @@ const getJson = getJsonData()
 $(".unit--select").click(function() {
     let mainCondition = this.classList.contains("unit--active")
     if (mainCondition === false)   {
-        let conditionPriceGold = this.parentNode.parentNode.nextElementSibling.children[1].classList.contains("price--gold")
+        let conditionPriceGold   = this.parentNode.parentNode.nextElementSibling.children[1].classList.contains("price--gold")
         let conditionPriceRetail = this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].classList.contains("price")
-        let currentId = this.parentNode.parentNode.nextElementSibling.children[1].id
-        let currentValue = this.parentNode.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].children[0].children[0].getAttribute("value")
+        let currentId            = this.parentNode.parentNode.nextElementSibling.children[1].id
+        let currentValue         = this.parentNode.parentNode.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.children[0].children[0].children[0].getAttribute("value")
         
         this.className += " unit--active"
         if (this.nextElementSibling != null) {
@@ -144,10 +144,10 @@ $(".unit--select").click(function() {
 
         for (key in getJson) {
             if (currentId == getJson[key].productId) {
-                var basePriceGold = getJson[key].priceGold
+                var basePriceGold    = getJson[key].priceGold
                 var basePriceGoldAlt = getJson[key].priceGoldAlt
-                var basePrice = getJson[key].priceRetail
-                var basePriceAlt = getJson[key].priceRetailAlt
+                var basePrice        = getJson[key].priceRetail
+                var basePriceAlt     = getJson[key].priceRetailAlt
             }
         }
         if (conditionPriceGold === false) {
@@ -172,6 +172,9 @@ $(".unit--select").click(function() {
 $(".stepper-arrow.up").click(function() {
     let val = +this.previousElementSibling.getAttribute("value") || 0
     this.previousElementSibling.setAttribute("value", ++val)
+    let currentPriceGold = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].textContent
+    let currentPrice = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].textContent
+    // console.log(currentPrice)
     for (key in getJson) {
         if (this.getAttribute("data-id") == getJson[key].productId) {            
             var priceGoldAlt = getJson[key].priceGoldAlt
@@ -183,18 +186,30 @@ $(".stepper-arrow.up").click(function() {
 
 })
 $(".stepper-arrow.down").click(function() {
-    let valMinus = this.parentNode.querySelector('input').getAttribute("value");
-    if (valMinus > 0) {
-        this.parentNode.querySelector('input').setAttribute("value", --valMinus)
+    let val = this.parentNode.querySelector('input').getAttribute("value");
+    let currentId = this.getAttribute("data-id")
+    if (val > 0) {
+        this.parentNode.querySelector('input').setAttribute("value", --val)
+        this.parentNode.querySelector('input').innerHTML = val
     }    
     for (key in getJson) {
-        if (this.getAttribute("data-id") == getJson[key].productId) {
-            var basePriceGold = getJson[key].priceGold
-            var basePrice = getJson[key].priceRetail            
+        if (currentId == getJson[key].productId) {
+             var basePriceGold = getJson[key].priceGold
+             var basePriceGoldAlt = getJson[key].priceGoldAlt
+             var basePrice = getJson[key].priceRetail
+             var basePriceAlt = getJson[key].priceRetailAlt 
         }
     }     
-     this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePrice*valMinus
-     this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGold*valMinus
+    let parent = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0]
+    let unitActive = parent.querySelector(".unit--active")
+    let condition  = unitActive.children[0].textContent
+    if (condition === "За м. кв.") {
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePriceAlt*val
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGoldAlt*val
+  } else  {
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePrice*val
+      this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGold*val
+  } 
 })
 
 $(".product__count.stepper-input").change(function() {            
@@ -210,8 +225,7 @@ $(".product__count.stepper-input").change(function() {
   }
   let parent = this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0]
   let unitActive = parent.querySelector(".unit--active")
-  let condition  = unitActive.children[0].textContent 
-  console.log(condition)
+  let condition  = unitActive.children[0].textContent
   if (condition === "За м. кв.") {
       this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[0].innerHTML = basePriceAlt*this.value
       this.parentNode.parentNode.parentNode.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.children[1].innerHTML = basePriceGoldAlt*this.value

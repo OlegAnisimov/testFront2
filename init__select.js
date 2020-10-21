@@ -1,44 +1,43 @@
-function getJsonData(){
-    var jqXHR = $.ajax({
-        url: "products.json",
-        async: false});
-
-    return $.parseJSON(jqXHR.responseText);
-}
-const getJson = getJsonData()
-// console.log(typeof getJson)
-// let retailPriceAlt = getJson[0].priceRetailAlt
-// let priceGoldAlt = getJson[0].priceGoldAlt
-// let priceRetail = getJson[0].priceRetail
-// let priceGold = getJson[0].priceGold
-console.log()
-$(".goldPrice").val
-for (x in getJson) {
-    let retailPriceAlt = getJson[x].priceRetailAlt
-    let priceGoldAlt = getJson[x].priceGoldAlt
-    let priceRetail = getJson[x].priceRetail
-    let priceGold = getJson[x].priceGold
-    // console.log(retailPriceAlt)
-}
+import {getJson} from "./functions";
 
 $(".unit--select").click(function() {
     let mainCondition = this.classList.contains("unit--active")
     if (mainCondition === false)   {
-        this.className += " unit--active"
         let conditionPriceGold = this.parentNode.parentNode.nextElementSibling.children[1].classList.contains("price--gold")
-        if (conditionPriceGold === false) {
-            this.parentNode.parentNode.nextElementSibling.children[1].className += " price--gold"
-            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = priceGold
-        }
-        if (conditionPriceGold === true) {
-            this.parentNode.parentNode.nextElementSibling.children[1].classList.remove("price--gold")
-            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = priceGoldAlt
-        }
-
+        let conditionPriceRetail = this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].classList.contains("price")
+        let currentId = this.parentNode.parentNode.nextElementSibling.children[1].id
+        console.log(currentId)
+        this.className += " unit--active"
         if (this.nextElementSibling != null) {
             this.nextElementSibling.classList.remove("unit--active")
         } else  {
             this.previousElementSibling.classList.remove("unit--active")
+        }
+
+        for (key in getJson) {
+            if (currentId == getJson[key].productId) {
+                var currentPriceGold = getJson[key].priceGold
+                var currentPriceGoldAlt = getJson[key].priceGoldAlt
+
+                var currentPrice = getJson[key].priceRetail
+                var currentPriceAlt = getJson[key].priceRetailAlt
+            }
+        }
+        if (conditionPriceGold === false) {
+            this.parentNode.parentNode.nextElementSibling.children[1].className += " price--gold"
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGold
+        }
+        if (conditionPriceGold === true) {
+            this.parentNode.parentNode.nextElementSibling.children[1].classList.remove("price--gold")
+            this.parentNode.parentNode.nextElementSibling.children[1].innerHTML = currentPriceGoldAlt
+        }
+        if (conditionPriceRetail === false) {
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].className += " price"
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = currentPrice
+        }
+        if (conditionPriceRetail === true) {
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].classList.remove("price")
+            this.parentNode.parentNode.nextElementSibling.nextElementSibling.children[0].innerHTML = currentPriceAlt
         }
     }
 })
